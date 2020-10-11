@@ -1,4 +1,4 @@
-package com.musta.belmo.booqs.booqs.entite;
+package com.musta.belmo.booqs.entite;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

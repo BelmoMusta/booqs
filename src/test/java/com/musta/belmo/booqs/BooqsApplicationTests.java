@@ -1,4 +1,4 @@
-package com.musta.belmo.booqs.booqs;
+package com.musta.belmo.booqs;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
