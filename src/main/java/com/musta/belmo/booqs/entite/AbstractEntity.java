@@ -21,7 +21,7 @@ import java.util.Date;
 @EqualsAndHashCode(of = "id")
 public abstract class AbstractEntity implements Comparable<AbstractEntity> {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Temporal(TemporalType.TIMESTAMP)

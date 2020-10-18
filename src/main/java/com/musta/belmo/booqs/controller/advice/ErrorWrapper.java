@@ -14,4 +14,8 @@ import lombok.Setter;
 public class ErrorWrapper {
     private Integer code;
     private String  message;
+    public ErrorWrapper withMessage(String message){
+        setMessage(message);
+        return this;
+    }
 }

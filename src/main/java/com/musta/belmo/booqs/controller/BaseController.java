@@ -2,7 +2,7 @@ package com.musta.belmo.booqs.controller;
 
 import org.springdoc.core.GroupedOpenApi;
 
-public abstract class BaseController extends ReponseController {
+public abstract class BaseController extends ResponseController {
 	
 	@SuppressWarnings("unused")
 	public abstract GroupedOpenApi createGroupedOpenApiAsBean();

@@ -1,6 +1,5 @@
 package com.musta.belmo.booqs.entite;
 
-import io.swagger.v3.oas.annotations.Hidden;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,26 +11,26 @@ import java.util.Set;
 @Entity
 @Setter
 @Getter
-@Hidden
+
 public class Author extends AbstractEntity {
 	private String firstName;
 	private String middleName;
 	private String lastName;
 	
 	@OneToMany(mappedBy = "author")
-	private Set<Book> books;
+	private Set<Book> Sbooks;
 	
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(Object another) {
 		final boolean areEqual;
-		if (this == o) {
+		if (this == another) {
 			areEqual = true;
-		} else if (o == null || getClass() != o.getClass()) {
+		} else if (another == null || getClass() != another.getClass()) {
 			areEqual = false;
-		} else if (!super.equals(o)) {
+		} else if (!super.equals(another)) {
 			areEqual = false;
 		} else {
-			final Author otherAuthor = (Author) o;
+			final Author otherAuthor = (Author) another;
 			areEqual = Objects.equals(getId(), otherAuthor.getId());
 		}
 		return areEqual;

@@ -11,7 +11,7 @@ public class BookDTO {
 	private Long id;
 	private String title;
 	private String isbn;
-	private AuthorDTO author;
+	private Long author;
 	private Integer year;
 	private BigDecimal price;
 	private String contentAbstract;

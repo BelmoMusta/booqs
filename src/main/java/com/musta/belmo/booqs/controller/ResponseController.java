@@ -1,9 +1,10 @@
 package com.musta.belmo.booqs.controller;
 
+import com.musta.belmo.booqs.exception.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-public abstract class ReponseController {
+public abstract class ResponseController {
 	
 	protected <T> ResponseEntity<T> okAsResponseWithBody(T body) {
 		return ResponseEntity.ok()
@@ -11,7 +12,13 @@ public abstract class ReponseController {
 	}
 	
 	protected <T> ResponseEntity<T> notFound() {
-		return ResponseEntity.notFound().build();
+		throw new NotFoundException();
+		
+	}
+	
+	protected <T> ResponseEntity<T> notFound(String resourceName, Long id) {
+		throw new NotFoundException(resourceName, id);
+		
 	}
 	
 	protected <T> ResponseEntity<T> badRequest() {

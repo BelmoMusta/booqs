@@ -1,5 +1,6 @@
 package com.musta.belmo.booqs.controller.advice;
 
+import com.musta.belmo.booqs.exception.NotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,5 +22,11 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 	public ResponseEntity<ErrorWrapper> handleOthers(DataIntegrityViolationException e) {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 				.body(ErrorEnum.DATA_INTEGRITY_ERROR.getErrorWrapper());
+	}
+	@ExceptionHandler(value = {NotFoundException.class})
+	public ResponseEntity<ErrorWrapper> notFound(NotFoundException e) {
+		return ResponseEntity.status(HttpStatus.NOT_FOUND)
+				.body(ErrorEnum.NOT_FOUND.getErrorWrapper()
+						.withMessage(e.getMessage()));
 	}
 }
