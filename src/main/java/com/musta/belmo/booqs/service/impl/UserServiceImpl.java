@@ -96,9 +96,7 @@ public class UserServiceImpl implements UserService {
 			if (authorities == null) {
 				return;
 			}
-			if (!authorities.contains(role)) {
-				authorities.remove(role);
-			}
+			authorities.remove(role);
 			userRepository.saveAndFlush(user);
 		}
 	}
