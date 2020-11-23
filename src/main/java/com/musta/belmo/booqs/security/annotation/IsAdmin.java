@@ -1,4 +1,4 @@
-package com.musta.belmo.booqs.security;
+package com.musta.belmo.booqs.security.annotation;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 

@@ -1,8 +1,11 @@
-package com.musta.belmo.booqs.security;
+package com.musta.belmo.booqs.security.jwt;
 
+import com.musta.belmo.booqs.security.jwt.JwtAuthneticationEntryPoint;
+import com.musta.belmo.booqs.security.jwt.JwtRequestFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -11,29 +14,27 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
+@Order(1)
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+public class JWTWebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private JwtAuthneticationEntryPoint jwtAuthneticationEntryPoint;
 	@Autowired
 	private UserDetailsService jwtUserDetailsService;
 	@Autowired
 	private JwtRequestFilter jwtRequestFilter;
+	@Autowired
+	PasswordEncoder passwordEncoder;
 	
 	@Autowired
 	protected void configureGlobal(AuthenticationManagerBuilder authBuilder) throws Exception {
 		authBuilder.userDetailsService(jwtUserDetailsService)
-				.passwordEncoder(passwordEncoder());
-	}
-	@Bean
-	public PasswordEncoder passwordEncoder(){
-		return new BCryptPasswordEncoder();
+				.passwordEncoder(passwordEncoder);
 	}
 	
 	@Override
@@ -43,16 +44,24 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 	
 	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		http.csrf().disable()
-		.authorizeRequests().antMatchers("/authenticate","/user/create","/user/activate/**").permitAll()
-				.anyRequest().authenticated().and()
-				.exceptionHandling()
-				.authenticationEntryPoint(jwtAuthneticationEntryPoint)
-				.and()
-				.sessionManagement()
+	protected void configure(HttpSecurity httpSecurity) throws Exception {
+		// We don't need CSRF for this example
+		httpSecurity.csrf().disable()
+				// dont authenticate this particular request
+				.antMatcher("/api/**")
+				.authorizeRequests().antMatchers("/api/authenticate","/api/user/activate/**").permitAll().
+				// all other requests need to be authenticated
+						anyRequest().authenticated().and().
+				// make sure we use stateless session; session won't be used to
+				// store user's state.
+						exceptionHandling().authenticationEntryPoint(jwtAuthneticationEntryPoint)
+				.and().sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-		http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+		
+		// Add a filter to validate the tokens with every request
+		httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+		
+		
 		
 	}
 }

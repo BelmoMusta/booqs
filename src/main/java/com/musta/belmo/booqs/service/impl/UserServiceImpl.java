@@ -4,6 +4,7 @@ import com.musta.belmo.booqs.entite.Role;
 import com.musta.belmo.booqs.entite.User;
 import com.musta.belmo.booqs.entite.UserActivation;
 import com.musta.belmo.booqs.entite.dto.UserRoleDTO;
+import com.musta.belmo.booqs.exception.NotFoundException;
 import com.musta.belmo.booqs.repository.UserRepository;
 import com.musta.belmo.booqs.service.RoleService;
 import com.musta.belmo.booqs.service.UserActivationService;
@@ -23,6 +24,7 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	private RoleService roleService;
+	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
@@ -72,7 +74,7 @@ public class UserServiceImpl implements UserService {
 			role = roleService.createRole(userRoleDTO.getRole());
 		}
 		User user = userRepository.findById(userRoleDTO.getUserId())
-				.orElseThrow(() -> new RuntimeException("User not found"));
+				.orElseThrow(() -> new NotFoundException("User", userRoleDTO.getUserId()));
 		Collection<Role> authorities = user.getAuthorities();
 		if (authorities == null) {
 			authorities = new HashSet<>();
@@ -87,18 +89,19 @@ public class UserServiceImpl implements UserService {
 	
 	@Override
 	public void revokeRole(UserRoleDTO userRoleDTO) {
-		Role role = roleService.findByName(userRoleDTO.getRole());
+		final Role role = roleService.findByName(userRoleDTO.getRole());
 		if (role != null) {
 			
 			User user = userRepository.findById(userRoleDTO.getUserId())
-					.orElseThrow(() -> new RuntimeException("User not found"));
+					.orElse(null);
+			if (user == null) {
+				return;
+			}
 			Collection<Role> authorities = user.getAuthorities();
 			if (authorities == null) {
 				return;
 			}
-			if (!authorities.contains(role)) {
-				authorities.remove(role);
-			}
+			authorities.remove(role);
 			userRepository.saveAndFlush(user);
 		}
 	}

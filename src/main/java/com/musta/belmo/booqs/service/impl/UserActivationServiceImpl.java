@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
@@ -17,7 +16,6 @@ import java.util.UUID;
 public class UserActivationServiceImpl implements UserActivationService {
 	@Autowired
 	private UserActivationRepository userActivationRepository;
-	
 	
 	@Override
 	public UserActivation findbyToken(String token) {

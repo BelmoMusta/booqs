@@ -16,6 +16,9 @@ public class EqualsSpecification<T> implements Specification<T> {
 		this.value = value;
 	}
 	
+	public static <T> EqualsSpecification<T> create(String field, String value) {
+		return new EqualsSpecification<>(field, value);
+	}
 	
 	@Override
 	public Predicate toPredicate(Root<T> root, CriteriaQuery<?> criteriaQuery,

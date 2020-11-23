@@ -1,5 +1,6 @@
-package com.musta.belmo.booqs.security;
+package com.musta.belmo.booqs.security.jwt;
 
+import com.musta.belmo.booqs.exception.AuthenticationException;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -32,14 +33,12 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 			try {
 				username = jwtTokenUtil.getUsernameFromToken(jwtToken);
 			} catch (IllegalArgumentException ex) {
-				System.out.println("invalide JWT token");
+				throw new AuthenticationException("invalide JWT token");
 			} catch (ExpiredJwtException expiredException) {
-				System.out.println("JWT token expired");
+				throw new AuthenticationException("JWT token expired");
 			}
-			
-		} else {
-			System.out.println("Does not begin with 'Bearer '");
 		}
+		
 		if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 			UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(username);
 			if (jwtTokenUtil.validateToken(jwtToken, userDetails)) {

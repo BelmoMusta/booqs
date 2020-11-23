@@ -13,6 +13,7 @@ import java.util.Objects;
 
 public class Role extends AbstractEntity implements GrantedAuthority {
 	private String authority;
+	private boolean enabled;
 	
 	@Override
 	public boolean equals(Object another) {
@@ -26,7 +27,7 @@ public class Role extends AbstractEntity implements GrantedAuthority {
 		} else {
 			final Role otherRole = (Role) another;
 			areEqual = Objects.equals(getId(), otherRole.getId())
-			|| Objects.equals(authority, otherRole.authority) ;
+					|| Objects.equals(authority, otherRole.authority);
 		}
 		return areEqual;
 	}

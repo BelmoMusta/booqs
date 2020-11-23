@@ -1,4 +1,4 @@
-package com.musta.belmo.booqs.security;
+package com.musta.belmo.booqs.security.jwt;
 
 import lombok.Getter;
 import lombok.Setter;
