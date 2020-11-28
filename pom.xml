@@ -68,12 +68,12 @@
             <version>1.2.32</version>
         </dependency>
 
-        <!--
-                <dependency>
-                    <groupId>com.querydsl</groupId>
-                    <artifactId>querydsl-apt</artifactId>
-                    <scope>provided</scope>
-                </dependency>-->
+
+        <dependency>
+            <groupId>com.querydsl</groupId>
+            <artifactId>querydsl-apt</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
         <dependency>
             <groupId>fr.xebia.extras</groupId>
