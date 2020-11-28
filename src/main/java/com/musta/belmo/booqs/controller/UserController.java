@@ -1,8 +1,8 @@
 package com.musta.belmo.booqs.controller;
 
+import com.musta.belmo.booqs.entite.dto.UserDTO;
 import com.musta.belmo.booqs.entite.dto.UserRoleDTO;
 import com.musta.belmo.booqs.security.annotation.IsAdmin;
-import com.musta.belmo.booqs.security.jwt.JwtRequest;
 import com.musta.belmo.booqs.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -21,8 +21,13 @@ public class UserController {
 	private UserService userService;
 	
 	@PostMapping("/create")
-	public void createUser(@RequestBody JwtRequest request) {
-		userService.createUser(request.getUsername(), request.getPassword(), request.getEmail());
+	public void createUser(@RequestBody UserDTO userRequest) {
+		userService.createUser(userRequest);
+	}
+	
+	@PostMapping("/register")
+	public void registerUser(@RequestBody UserDTO userRequest) {
+		userService.createUser(userRequest);
 	}
 	
 	@GetMapping("/activate/{token}")

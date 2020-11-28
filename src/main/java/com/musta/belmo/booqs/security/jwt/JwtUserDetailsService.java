@@ -14,7 +14,7 @@ public class JwtUserDetailsService implements UserDetailsService {
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) {
-		UserDetails user = userService.loadUserByUsername(username);
+		UserDetails user = userService.loadUserByUsernameOrEmail(username);
 		if (user != null) {
 			return user;
 		} else {

@@ -3,6 +3,7 @@ package com.musta.belmo.booqs.service.impl;
 import com.musta.belmo.booqs.entite.Role;
 import com.musta.belmo.booqs.entite.User;
 import com.musta.belmo.booqs.entite.UserActivation;
+import com.musta.belmo.booqs.entite.dto.UserDTO;
 import com.musta.belmo.booqs.entite.dto.UserRoleDTO;
 import com.musta.belmo.booqs.exception.NotFoundException;
 import com.musta.belmo.booqs.repository.UserRepository;
@@ -32,18 +33,19 @@ public class UserServiceImpl implements UserService {
 	private UserActivationService userActivationService;
 	
 	@Override
-	public User loadUserByUsername(String username) {
-		
-		return userRepository.findOne(new EqualsSpecification<>("username", username))
+	public User loadUserByUsernameOrEmail(String username) {
+		final EqualsSpecification<User> usernameSpec = new EqualsSpecification<>("username", username);
+		final EqualsSpecification<User> emailSpec = new EqualsSpecification<>("email", username);
+		return userRepository.findOne(usernameSpec.or(emailSpec))
 				.orElse(null);
 	}
 	
 	@Override
-	public void createUser(String username, String password, String email) {
+	public void createUser( UserDTO userRequest) {
 		final User user = new User();
-		user.setUsername(username);
-		user.setEmail(email);
-		user.setPassword(passwordEncoder.encode(password));
+		user.setUsername(userRequest.getUsername());
+		user.setEmail(userRequest.getEmail());
+		user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
 		user.setAccountNonExpired(true);
 		user.setAccountNonLocked(true);
 		user.setEnabled(false); // TO be activated

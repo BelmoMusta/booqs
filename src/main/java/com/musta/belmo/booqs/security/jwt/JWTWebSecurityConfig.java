@@ -49,8 +49,9 @@ public class JWTWebSecurityConfig extends WebSecurityConfigurerAdapter {
 		httpSecurity.csrf().disable()
 				// dont authenticate this particular request
 				.antMatcher("/api/**")
-				.authorizeRequests().antMatchers("/api/authenticate","/api/user/activate/**").permitAll().
-				// all other requests need to be authenticated
+				.authorizeRequests()
+				.antMatchers("/api/authenticate","/api/user/activate/**","/api/user/register")
+				.permitAll().// all other requests need to be authenticated
 						anyRequest().authenticated().and().
 				// make sure we use stateless session; session won't be used to
 				// store user's state.

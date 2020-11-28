@@ -1,7 +1,7 @@
 package com.musta.belmo.booqs.controller;
 
+import com.musta.belmo.booqs.entite.dto.UserDTO;
 import com.musta.belmo.booqs.security.jwt.JwtAuthenticationService;
-import com.musta.belmo.booqs.security.jwt.JwtRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -19,7 +19,7 @@ public class JwtAuthenticationController {
 	private JwtAuthenticationService jwtAuthenticationService;
 	
 	@RequestMapping(value = "/authenticate", method = RequestMethod.POST)
-	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
+	public ResponseEntity<?> createAuthenticationToken(@RequestBody UserDTO authenticationRequest) {
 		return ResponseEntity.ok(jwtAuthenticationService.authenticate(authenticationRequest));
 	}
 	

@@ -1,12 +1,13 @@
 package com.musta.belmo.booqs.security.jwt;
 
+import com.musta.belmo.booqs.entite.User;
+import com.musta.belmo.booqs.entite.dto.UserDTO;
 import com.musta.belmo.booqs.exception.AuthenticationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,14 +22,19 @@ public class JwtAuthenticationService {
 	@Autowired
 	private JwtUserDetailsService userDetailsService;
 	
-	public JwtResponse authenticate(JwtRequest authenticationRequest) {
+	public JwtResponse authenticate(UserDTO authenticationRequest) {
 		try {
 			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword()));
-			final UserDetails userDetails = userDetailsService
+			final User userDetails = (User) userDetailsService
 					.loadUserByUsername(authenticationRequest.getUsername());
 			
 			final String token = jwtTokenUtil.generateToken(userDetails);
-			return new JwtResponse(token);
+			final JwtResponse jwtResponse = new JwtResponse(token);
+			final UserDTO authUserDTO = new UserDTO();
+			authUserDTO.setEmail(userDetails.getEmail());
+			authUserDTO.setUsername(userDetails.getUsername());
+			jwtResponse.setUser(authUserDTO);
+			return jwtResponse;
 			
 		} catch (DisabledException e) {
 			throw new AuthenticationException(String.format("the user %s is disabled",
