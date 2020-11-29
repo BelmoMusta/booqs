@@ -4,10 +4,10 @@ import com.musta.belmo.booqs.entite.Role;
 import com.musta.belmo.booqs.entite.User;
 import com.musta.belmo.booqs.entite.UserActivation;
 import com.musta.belmo.booqs.entite.dto.CustomizedValueDTO;
+import com.musta.belmo.booqs.entite.dto.RoleDTO;
 import com.musta.belmo.booqs.entite.dto.UserDTO;
 import com.musta.belmo.booqs.entite.dto.UserRoleDTO;
 import com.musta.belmo.booqs.exception.NotFoundException;
-import com.musta.belmo.booqs.repository.CustomizedValueRepository;
 import com.musta.belmo.booqs.repository.UserRepository;
 import com.musta.belmo.booqs.service.CustomizedValueService;
 import com.musta.belmo.booqs.service.RoleService;
@@ -17,10 +17,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -59,7 +61,7 @@ public class UserServiceImpl implements UserService {
 		user.setCredentialsNonExpired(true);
 		final Role member = roleService.findByName("member");
 		if (member != null) {
-			user.setAuthorities(Arrays.asList(member));
+			user.setAuthorities(Collections.singleton(member));
 		}
 		userRepository.save(user);
 		userActivationService.createActivationForUser(user);
@@ -84,7 +86,7 @@ public class UserServiceImpl implements UserService {
 		}
 		User user = userRepository.findById(userRoleDTO.getUserId())
 				.orElseThrow(() -> new NotFoundException("User", userRoleDTO.getUserId()));
-		Collection<Role> authorities = user.getAuthorities();
+		Set<Role> authorities = user.getAuthorities();
 		if (authorities == null) {
 			authorities = new HashSet<>();
 			user.setAuthorities(authorities);
@@ -124,5 +126,22 @@ public class UserServiceImpl implements UserService {
 	public void assignCustomizedValue(Long id, CustomizedValueDTO customizedValueDTO) {
 		
 		customizedValueService.createFor(id,"user", customizedValueDTO);
+	}
+	
+	@Override
+	public List<RoleDTO> roles(Long id) {
+		Set<Role> roles = userRepository.findById(id)
+				.map(User::getAuthorities)
+				.orElseThrow(() -> new NotFoundException("User", id));
+		
+		return roles.stream()
+				.map(role -> {
+					RoleDTO roleDTO  = new RoleDTO();
+					roleDTO.setAuthority(role.getAuthority());
+					roleDTO.setEnabled(role.isEnabled());
+					
+					return roleDTO;
+				})
+				.collect(Collectors.toList());
 	}
 }

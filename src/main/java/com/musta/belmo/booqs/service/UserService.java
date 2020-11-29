@@ -2,6 +2,7 @@ package com.musta.belmo.booqs.service;
 
 import com.musta.belmo.booqs.entite.User;
 import com.musta.belmo.booqs.entite.dto.CustomizedValueDTO;
+import com.musta.belmo.booqs.entite.dto.RoleDTO;
 import com.musta.belmo.booqs.entite.dto.UserDTO;
 import com.musta.belmo.booqs.entite.dto.UserRoleDTO;
 
@@ -22,4 +23,6 @@ public interface UserService {
 	List<CustomizedValueDTO> customizedProperties(Long id);
 	
 	void assignCustomizedValue(Long id, CustomizedValueDTO customizedValueDTO);
+	
+	List<RoleDTO> roles(Long id);
 }

@@ -1,6 +1,7 @@
 package com.musta.belmo.booqs.controller;
 
 import com.musta.belmo.booqs.entite.dto.CustomizedValueDTO;
+import com.musta.belmo.booqs.entite.dto.RoleDTO;
 import com.musta.belmo.booqs.entite.dto.UserDTO;
 import com.musta.belmo.booqs.entite.dto.UserRoleDTO;
 import com.musta.belmo.booqs.security.annotation.IsAdmin;
@@ -37,6 +38,10 @@ public class UserController {
 	@GetMapping("/activate/{token}")
 	public void activate(@PathVariable String token) {
 		userService.activate(token);
+	}
+	@GetMapping("/{id}/roles")
+	public List<RoleDTO> roles(@PathVariable Long id) {
+		return userService.roles(id);
 	}
 	
 	@PostMapping("/assign-role")

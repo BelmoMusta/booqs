@@ -27,7 +27,7 @@ public class User extends AbstractEntity implements UserDetails {
 	@JoinTable(name = "user_role",
 			joinColumns = {@JoinColumn(name = "user_id")},
 			inverseJoinColumns = {@JoinColumn(name = "role_id")})
-	private Collection<Role> authorities;
+	private Set<Role> authorities;
 	private boolean accountNonExpired;
 	private boolean accountNonLocked;
 	private boolean credentialsNonExpired;
