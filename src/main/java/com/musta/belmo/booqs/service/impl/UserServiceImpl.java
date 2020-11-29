@@ -3,10 +3,13 @@ package com.musta.belmo.booqs.service.impl;
 import com.musta.belmo.booqs.entite.Role;
 import com.musta.belmo.booqs.entite.User;
 import com.musta.belmo.booqs.entite.UserActivation;
+import com.musta.belmo.booqs.entite.dto.CustomizedValueDTO;
 import com.musta.belmo.booqs.entite.dto.UserDTO;
 import com.musta.belmo.booqs.entite.dto.UserRoleDTO;
 import com.musta.belmo.booqs.exception.NotFoundException;
+import com.musta.belmo.booqs.repository.CustomizedValueRepository;
 import com.musta.belmo.booqs.repository.UserRepository;
+import com.musta.belmo.booqs.service.CustomizedValueService;
 import com.musta.belmo.booqs.service.RoleService;
 import com.musta.belmo.booqs.service.UserActivationService;
 import com.musta.belmo.booqs.service.UserService;
@@ -17,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -31,6 +35,9 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	private UserActivationService userActivationService;
+	
+	@Autowired
+	private CustomizedValueService customizedValueService;
 	
 	@Override
 	public User loadUserByUsernameOrEmail(String username) {
@@ -106,5 +113,16 @@ public class UserServiceImpl implements UserService {
 			authorities.remove(role);
 			userRepository.saveAndFlush(user);
 		}
+	}
+	
+	@Override
+	public List<CustomizedValueDTO> customizedProperties(Long id) {
+	return customizedValueService.findFor("user", id);
+	}
+	
+	@Override
+	public void assignCustomizedValue(Long id, CustomizedValueDTO customizedValueDTO) {
+		
+		customizedValueService.createFor(id,"user", customizedValueDTO);
 	}
 }

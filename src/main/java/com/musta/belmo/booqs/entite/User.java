@@ -33,9 +33,9 @@ public class User extends AbstractEntity implements UserDetails {
 	private boolean credentialsNonExpired;
 	private boolean enabled;
 	
-	@OneToMany(fetch = FetchType.EAGER) // EAGER forces outer join
+	@OneToMany(fetch = FetchType.EAGER)
 	@JoinColumn(name = "entry_id",updatable = false, insertable = false)
-	@Where(clause = "table_name = 'user'") // "id" is A's PK... modify as needed
+	@Where(clause = "table_name = 'user'")
 	Set<CustomizedValue> customizedValues;
 	
 }
